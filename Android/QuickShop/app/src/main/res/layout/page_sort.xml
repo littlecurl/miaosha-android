@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/bt_item_type_1"
+        android:layout_gravity="left|top"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_type_book"
+        app:layout_heightPercent="48%"
+        app:layout_widthPercent="46%"
+
+        />
+
+    <Button
+        android:id="@+id/bt_item_type_2"
+        android:layout_gravity="right|top"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_type_home"
+        app:layout_heightPercent="48%"
+        app:layout_widthPercent="46%" />
+
+    <Button
+        android:id="@+id/bt_item_type_3"
+        android:layout_gravity="left|bottom"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_type_food"
+        app:layout_heightPercent="48%"
+        app:layout_widthPercent="46%" />
+
+    <Button
+        android:id="@+id/bt_item_type_4"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="8dp"
+        android:background="@drawable/item_type_phone"
+        app:layout_heightPercent="48%"
+        app:layout_widthPercent="46%" />
+
+</android.support.percent.PercentFrameLayout>
