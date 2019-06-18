@@ -1,9 +1,9 @@
 package cn.edu.heuet.quickshop.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.heuet.quickshop.R;
+import cn.edu.heuet.quickshop.activity.LoginActivity;
 import cn.edu.heuet.quickshop.loader.ModelImageLoader;
+
 
 public class GuideActivity extends AppCompatActivity {
 
@@ -40,7 +42,7 @@ public class GuideActivity extends AppCompatActivity {
 
     // 全屏显示
     private void fullScreenConfig() {
-        // 去除ActionBar(因使用的是NoActivity的主题，故此句有无皆可)
+        // 去除ActionBar(因使用的是NoActionBar的主题，故此句有无皆可)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         // 去除状态栏，如 电量、Wifi信号等
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

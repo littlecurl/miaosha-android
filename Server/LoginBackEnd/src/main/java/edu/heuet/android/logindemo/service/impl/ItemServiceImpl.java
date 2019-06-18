@@ -10,7 +10,6 @@ import edu.heuet.android.logindemo.service.ItemService;
 import edu.heuet.android.logindemo.service.model.ItemModel;
 import edu.heuet.android.logindemo.validator.ValidationResult;
 import edu.heuet.android.logindemo.validator.ValidatorImpl;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,14 +80,20 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemModel> listItem() {
+        // DAO层调用数据库查询语句
+        // SELECT * FROM item ORDER BY sales DESC;
         List<ItemDO> itemDOList = itemDOMapper.listItem();
         // Java8 的 stream API map、collect、Collection.toList()
         List<ItemModel> itemModelList = itemDOList.stream().map(
                 itemDO -> {
+                    // DAO层调用数据库查询语句
+                    // SELECT stock FROM item_stock WHERE id = itemDO.getId();
                     ItemStockDO itemStockDO = itemStockDOMapper.selectByItemId(itemDO.getId());
+                    // 整合两个DO为Model
                     ItemModel itemModel = this.convertModelFromDataObject(itemDO, itemStockDO);
                     return itemModel;
                 }
+                // 将Model转为List
         ).collect(Collectors.toList());
         return itemModelList;
     }
@@ -104,6 +109,17 @@ public class ItemServiceImpl implements ItemService {
 
         ItemModel itemModel = convertModelFromDataObject(itemDO, itemStockDO);
         return itemModel;
+    }
+
+    @Override
+    public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException{
+        int affectedRow = itemStockDOMapper.decreaseStock(itemId, amount);
+        // 更新库存成功
+        if (affectedRow > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private ItemModel convertModelFromDataObject(ItemDO itemDO, ItemStockDO itemStockDO){

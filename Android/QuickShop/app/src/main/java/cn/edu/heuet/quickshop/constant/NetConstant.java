@@ -1,4 +1,5 @@
 package cn.edu.heuet.quickshop.constant;
+
 /*
 这些内容按理说都应该在配置文件中，方便一些我直接放接口这里了
  */
@@ -12,12 +13,12 @@ public class NetConstant {
     否则，像夜神、雷电等，就必须ipconfig一下
     String hostname = "172.31.84.21";
      */
-    private static String getOtpCodeURL = "http://10.0.2.2:8090"+"/user/getOtp";
-    private static String loginURL = "http://10.0.2.2:8090"+"/user/login";
-    private static String registerURL = "http://10.0.2.2:8090"+"/user/register";
+    private static String getOtpCodeURL = "http://10.0.2.2:8090/user/getOtp";
+    private static String loginURL = "http://10.0.2.2:8090/user/login";
+    private static String registerURL = "http://10.0.2.2:8090/user/register";
     private static String createItemURL = "http://10.0.2.2:8090/item/create";
     private static String getItemListURL = "http://10.0.2.2:8090/item/list";
-
+    private static String submitOrderURL = "http://10.0.2.2:8090/order/createorder";
     /*
        如果想真机安装运行，可以自己租服务器，
        也可以使用花生壳、ngrok等内网穿透工具获得公网域名
@@ -45,8 +46,6 @@ public class NetConstant {
 
     /********************** 远程服务器调试：阿里服务器腾讯公网域名 https  *****************************/
     // 还没整明白如何给服务器安装证书呢
-
-
     public static String getGetOtpCodeURL() {
         return getOtpCodeURL;
     }
@@ -67,4 +66,7 @@ public class NetConstant {
         return getItemListURL;
     }
 
+    public static String getSubmitOrderURL() {
+        return submitOrderURL;
+    }
 }

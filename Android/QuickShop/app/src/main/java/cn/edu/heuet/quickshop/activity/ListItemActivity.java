@@ -6,10 +6,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -45,19 +48,26 @@ public class ListItemActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fullScreenConfig();
         setContentView(R.layout.activity_list_item);
+
         // 查找控件
         RecyclerView recyclerView = findViewById(R.id.rv_item_list);
+
         // 设置布局管理器
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+
         // 设置数据源
         itemVOList = new ArrayList<>();
         itemVOAdapter = new ItemVOAdapter(this, itemVOList);
-        // 设置适配器
+
+        // 设置适配器，每一项的点击事件都在适配器里实现了
         recyclerView.setAdapter(itemVOAdapter);
+
         // 加载网络数据
         loadUrlData(URL);
+
         // 下拉刷新
         swipeRefresh = findViewById(R.id.sr_item_list);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
@@ -66,41 +76,48 @@ public class ListItemActivity extends Activity {
                     @Override
                     public void onRefresh() {
                         refreshItemList();
-                        itemVOAdapter.notifyDataSetChanged();
-                        swipeRefresh.setRefreshing(false);
                     }
                 }
         );
 
     }
+    // 全屏显示
+    private void fullScreenConfig() {
+        // 去除ActionBar(因使用的是NoActionBar的主题，故此句有无皆可)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 去除状态栏，如 电量、Wifi信号等
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
 
     // 下拉刷新的实现
     private void refreshItemList() {
-        new Thread(
-                new Runnable() {
+        new Thread( new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // 为了达到转圈效果可视化，否则会一闪而过
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loadUrlData(URL);
-                                itemVOAdapter.notifyDataSetChanged();
-                                swipeRefresh.setRefreshing(false);
-                                Log.d(TAG, "刷新完成！");
-                            }
-                        });
+                        loadUrlData(URL);
+                        itemVOAdapter.notifyDataSetChanged();
+                        swipeRefresh.setRefreshing(false);
+                        Log.d(TAG, "刷新完成！");
                     }
-                }).start();
+                });
+            }
+        }).start();
     }
 
     // 加载网络数据的实现
     @SuppressLint("StaticFieldLeak")
     private void loadUrlData(final String url) {
+        // 使用AsyncTask是关键
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -163,9 +180,10 @@ public class ListItemActivity extends Activity {
         String status = responseBodyJSONObject.get("status").getAsString();
         return status;
     }
-
-    // 注意这里的返回值不在是单个JsonObject，而是JsonArray
-    // 强大的Gson可以快速将JsonArray转为List
+    /*
+     注意这里的返回值不在是单个JsonObject，而是JsonArray
+     强大的Gson可以快速将JsonArray转为List
+     */
     private List<ItemVO> parseJSONToList(JsonObject responseBodyJSONObject) {
         JsonArray jsonArray = responseBodyJSONObject.get("data").getAsJsonArray();
         Log.d(TAG, "size: " + jsonArray.size());

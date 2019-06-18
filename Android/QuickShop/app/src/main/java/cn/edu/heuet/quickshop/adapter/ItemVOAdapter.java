@@ -22,19 +22,19 @@ import com.bumptech.glide.Glide;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import cn.edu.heuet.quickshop.activity.DetailItemActivity;
 import cn.edu.heuet.quickshop.R;
+import cn.edu.heuet.quickshop.activity.DetailItemActivity;
 import cn.edu.heuet.quickshop.viewobject.ItemVO;
 
 public class ItemVOAdapter extends RecyclerView.Adapter<ItemVOAdapter.ViewHolder> {
     private Context mContext;
     private List<ItemVO> mItemVOList;
     private ItemVO itemVO;
+    private String id;
     private String price;
     private String imgUrl;
     private String description;
     private String sales;
-    private String id;
     private String title;
     private String stock;
 
@@ -56,7 +56,6 @@ public class ItemVOAdapter extends RecyclerView.Adapter<ItemVOAdapter.ViewHolder
             super(cdview);
             cardView = (CardView) cdview;
             itemImg = cdview.findViewById(R.id.iv_item_img);
-
             itemTitle = cdview.findViewById(R.id.tv_item_title);
             itemPrice = cdview.findViewById(R.id.tv_item_price);
             itemSales = cdview.findViewById(R.id.tv_item_sales);
@@ -78,10 +77,10 @@ public class ItemVOAdapter extends RecyclerView.Adapter<ItemVOAdapter.ViewHolder
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder listItemViewHolder, int i) {
         // 获取每一个itemVO对象
         itemVO = mItemVOList.get(i);
-        // id
+        // id, 下单的时候需要
         id = itemVO.getId();
         // 名称
         title = itemVO.getTitle();
@@ -97,29 +96,25 @@ public class ItemVOAdapter extends RecyclerView.Adapter<ItemVOAdapter.ViewHolder
         // 库存
         stock = itemVO.getStock();
 
-
-
         // 绑定对象属性到布局中
-        Glide.with(mContext)
-                .load(imgUrl)
-                .into(viewHolder.itemImg);
-        viewHolder.itemTitle.setText(title);
-        viewHolder.itemPrice.setText(price);
-        viewHolder.itemSales.setText(sales);
-
-
+        // 获取JSON反序列化出的对象的Url对应图片并填充
+        Glide.with(mContext).load(imgUrl).into(listItemViewHolder.itemImg);
+        // 获取JSON反序列化出的对象的title、price、sales并填充
+        listItemViewHolder.itemTitle.setText(title);
+        listItemViewHolder.itemPrice.setText(price);
+        listItemViewHolder.itemSales.setText(sales);
 
         // 卡片点击事件
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+        listItemViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 这里跳转重点是获取到上下文
                 Intent it_list_to_detail = new Intent(v.getContext(), DetailItemActivity.class);
-                it_list_to_detail.putExtra("id", id);
+                it_list_to_detail.putExtra("id",id);
                 it_list_to_detail.putExtra("title", title);
-                it_list_to_detail.putExtra("imgUrl", imgUrl);
                 it_list_to_detail.putExtra("description", description);
                 it_list_to_detail.putExtra("price", price);
+                it_list_to_detail.putExtra("imgUrl", imgUrl);
                 it_list_to_detail.putExtra("sales", sales);
                 it_list_to_detail.putExtra("stock", stock);
                 // 这里跳转重点是获取到上下文

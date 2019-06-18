@@ -17,7 +17,7 @@ public abstract class BasePage {
     public BasePage(Context context) {
         this.context = context;
         if (convertView() == null) {
-            throw new ClassCastException("resource id just can be type of layout");
+            throw new ClassCastException("没有正确获取上下文！");
         }
         this.view = convertView();
         init();

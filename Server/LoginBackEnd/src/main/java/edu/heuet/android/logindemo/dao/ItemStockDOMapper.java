@@ -1,6 +1,7 @@
 package edu.heuet.android.logindemo.dao;
 
 import edu.heuet.android.logindemo.dataobject.ItemStockDO;
+import org.apache.ibatis.annotations.Param;
 
 public interface ItemStockDOMapper {
     /**
@@ -51,4 +52,6 @@ public interface ItemStockDOMapper {
      * @mbg.generated Sun Jun 09 18:03:17 GMT+08:00 2019
      */
     int updateByPrimaryKey(ItemStockDO record);
+
+    int decreaseStock(@Param("itemId") Integer itemId, @Param("amount") Integer amount);
 }

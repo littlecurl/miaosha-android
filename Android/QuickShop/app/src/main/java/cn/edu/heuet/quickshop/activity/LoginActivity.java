@@ -3,8 +3,8 @@ package cn.edu.heuet.quickshop.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -40,7 +39,7 @@ public class LoginActivity extends AppCompatActivity
     Button bt_login = null;
     EditText et_account = null;
     EditText et_password = null;
-    TextView tv_register = null;
+    TextView tv_to_register = null;
     TextView tv_forget_password = null;
     TextView tv_service_agreement = null;
     ImageView iv_third_method1 = null;
@@ -51,11 +50,14 @@ public class LoginActivity extends AppCompatActivity
     SharedPreferences sp;
     // 声明SharedPreferences编辑器对象
     SharedPreferences.Editor editor;
-    // 声明并初始化token
-    String token = null;
+    // 声明token
+    private String token;
+    private String token_telphone;
+    private String token_password;
 
     // Log打印的通用Tag
     private final String TAG = "LoginActivity";
+
 
     /*
         为了避免onCreate方法体看起来过于庞大
@@ -71,7 +73,6 @@ public class LoginActivity extends AppCompatActivity
         initUI();
         // 为点击事件设置监听器
         setOnClickListener();
-
         /*
             设置当输入框焦点失去时提示错误信息
             第一个参数指明输入框对象
@@ -80,46 +81,11 @@ public class LoginActivity extends AppCompatActivity
          */
         setOnFocusChangeErrMsg(et_account, "phone", "手机号格式不正确");
         setOnFocusChangeErrMsg(et_password, "password", "密码必须不少于6位");
-
-        /*
-          创建一个sp对象
-          这种语法很奇怪，上来啥也没有就是get
-          相当于声明了一个小型数据库，名为login_info，模式是私有模式
-          私有模式应该是会对数据进行加密
-          这种小型数据库只能存放k,v键值对
-         */
-        sp = getSharedPreferences("login_info", MODE_PRIVATE);
-
-        /*
-          这里只是token自动登录的原理，真实用法比这个复杂一些
-          第一次登陆时，token为null，在最上面有初始化
-          第二次登录时，token就会有值了
-        */
-        token = sp.getString("token", null);
-
-        /*
-         要想实现自动登录，最好还是再有个splash启动界面，
-         就像微信启动页是个地球一样，
-         应该在splash界面进行判断，而不是login界面
-         */
-        if (token != null) {
-            /*
-              为了让登录成功后，界面有点东西
-              我把输入的手机号传过去了
-              正好可以练习一下Intent在不同Activity之间传参的知识点
-             */
-            String telphone = sp.getString("telphone", null);
-            Intent it_login_to_main = new Intent(LoginActivity.this, MainActivity.class);
-            it_login_to_main.putExtra("telphone", telphone);
-            startActivity(it_login_to_main);
-            // 登录成功后，登录界面就没必要占据资源了
-            finish();
-        }
     }
 
     // 全屏显示
     private void fullScreenConfig() {
-        // 去除ActionBar(因使用的是NoActivity的主题，故此句有无皆可)
+        // 去除ActionBar(因使用的是NoActionBar的主题，故此句有无皆可)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         // 去除状态栏，如 电量、Wifi信号等
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -132,7 +98,7 @@ public class LoginActivity extends AppCompatActivity
         bt_login = findViewById(R.id.bt_login); // 登录按钮
         et_account = findViewById(R.id.et_account); // 输入账号
         et_password = findViewById(R.id.et_password); // 输入密码
-        tv_register = findViewById(R.id.tv_register); // 注册
+        tv_to_register = findViewById(R.id.tv_to_register); // 注册
         tv_forget_password = findViewById(R.id.tv_forget_password); // 忘记密码
         tv_service_agreement = findViewById(R.id.tv_service_agreement); // 同意协议
         iv_third_method1 = findViewById(R.id.iv_third_method1); // 第三方登录方式1
@@ -192,7 +158,7 @@ public class LoginActivity extends AppCompatActivity
     // 为点击事件的UI对象设置监听器
     private void setOnClickListener() {
         bt_login.setOnClickListener(this); // 登录按钮
-        tv_register.setOnClickListener(this); // 注册文字
+        tv_to_register.setOnClickListener(this); // 注册文字
         tv_forget_password.setOnClickListener(this); // 忘记密码文字
         tv_service_agreement.setOnClickListener(this); // 同意协议文字
         iv_third_method1.setOnClickListener(this); // 第三方登录方式1
@@ -224,7 +190,7 @@ public class LoginActivity extends AppCompatActivity
                 asyncValidate(account, password);
                 break;
             // 注册用户 响应事件
-            case R.id.tv_register:
+            case R.id.tv_to_register:
                 /*
                   关于这里传参说明：给用户一个良好的体验，
                   如果在登录界面填写过的，就不需要再填了
@@ -314,13 +280,16 @@ public class LoginActivity extends AppCompatActivity
                              更新token，下次自动登录
                              真实的token值应该是一个加密字符串
                              我为了让token不为null，就随便传了一个字符串
+                             这里的telphone和password每次都要重写的
+                             否则无法实现修改密码
                             */
+                                sp = getSharedPreferences("login_info", MODE_PRIVATE);
                                 editor = sp.edit();
                                 editor.putString("token", "token_value");
                                 editor.putString("telphone", telphone);
+                                editor.putString("password", password);
                                 if (editor.commit()) {
                                     Intent it_login_to_main = new Intent(LoginActivity.this, MainActivity.class);
-                                    it_login_to_main.putExtra("telphone", telphone);
                                     startActivity(it_login_to_main);
                                     // 登录成功后，登录界面就没必要占据资源了
                                     finish();
@@ -333,7 +302,7 @@ public class LoginActivity extends AppCompatActivity
                             }
                         } else {
                             Log.d(TAG, "服务器异常");
-                            showToastInThread(LoginActivity.this, responseStr);
+//                            showToastInThread(LoginActivity.this, responseStr);
                         }
                     }
                 });
@@ -346,7 +315,7 @@ public class LoginActivity extends AppCompatActivity
       使用Gson解析response的JSON数据
       本来总共是有三步的，一、二步在方法调用之前执行了
     */
-    private String getStatus(JsonObject responseBodyJSONObject){
+    private String getStatus(JsonObject responseBodyJSONObject) {
         /* 使用Gson解析response的JSON数据的第三步
            通过JSON对象获取对应的属性值 */
         String status = responseBodyJSONObject.get("status").getAsString();

@@ -55,6 +55,7 @@ public class UserController extends BaseController{
 
     private HttpSession session;
 
+
     /*  */
     /*
     **************** 对前两个注解的解释：****************
@@ -233,6 +234,8 @@ public class UserController extends BaseController{
 
         // 将登陆凭证加入到用户登录成功的Session中
         // 切换web页面的时候，可以不用重复登录
+        // session在使用前需要httpServletRequest.getSession()，否则会java.lang.NullPointerException
+        session = httpServletRequest.getSession();
         session.setAttribute("IS_LOGIN",true);
         session.setAttribute("LOGIN_USER", userModel);
         // 登录成功，只返回success即可

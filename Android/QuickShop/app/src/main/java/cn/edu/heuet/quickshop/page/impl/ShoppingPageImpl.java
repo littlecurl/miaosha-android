@@ -50,12 +50,11 @@ public class ShoppingPageImpl extends BasePage implements View.OnClickListener {
 
     @Override
     public void init() {
+        // 注册EventBus
         EventBus.getDefault().register(this); // 传this , 传 context 报错
+
         mList = new ArrayList<>();
-
-        recyclerView = view.findViewById(R.id.shop_cart);
         imgRmpty = view.findViewById(R.id.img_empty);
-
         tvClear = view.findViewById(R.id.tv_clear);
         tvDel = view.findViewById(R.id.tv_del);
         tvSummary = view.findViewById(R.id.tv_summary);
@@ -65,6 +64,8 @@ public class ShoppingPageImpl extends BasePage implements View.OnClickListener {
         tvDel.setOnClickListener(this);
         tvSummary.setOnClickListener(this);
 
+
+        recyclerView = view.findViewById(R.id.shop_cart);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new ShopCartAdapter(context, mList);
         recyclerView.setAdapter(adapter);

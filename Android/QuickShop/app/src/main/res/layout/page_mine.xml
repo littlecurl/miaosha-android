@@ -227,4 +227,28 @@
             tools:ignore="HardcodedText"
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_logout"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="退出登录"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 </android.support.v7.widget.LinearLayoutCompat>

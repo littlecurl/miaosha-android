@@ -5,6 +5,8 @@ import edu.heuet.android.logindemo.error.BusinessException;
 import edu.heuet.android.logindemo.response.CommonReturnType;
 import edu.heuet.android.logindemo.service.ItemService;
 import edu.heuet.android.logindemo.service.model.ItemModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 public class ItemController extends BaseController {
 
+    private static Logger Log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     ItemService itemService;
     /*
@@ -78,8 +81,9 @@ public class ItemController extends BaseController {
                     ItemVO itemVO = this.convertVOFromModel(itemModel);
                     return itemVO;
                 }
+                // 将ModelList转为VOList
         ).collect(Collectors.toList());
-        System.out.println("返回数据");
+        // Log.info("此处返回itemVOList，加上@ResponseBody，会被序列化为JSONArray");
         return CommonReturnType.create(itemVOList);
     }
 

@@ -5,13 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
-
 import cn.edu.heuet.quickshop.R;
-import cn.edu.heuet.quickshop.activity.DetailItemActivity;
 import cn.edu.heuet.quickshop.activity.ListItemActivity;
 import cn.edu.heuet.quickshop.page.BasePage;
 

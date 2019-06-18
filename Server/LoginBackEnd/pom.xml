@@ -58,6 +58,20 @@
             <version>1.3.1</version>
         </dependency>
 
+        <!-- 14、Mybatis Pagehelper -->
+        <!--mapper-->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+        <!--pagehelper-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
         <!-- 11、Apache commons-->
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
@@ -88,6 +102,8 @@
             <version>1.7.25</version>
             <!-- <scope>test</scope> -->
         </dependency>
+
+
 
     </dependencies>
 

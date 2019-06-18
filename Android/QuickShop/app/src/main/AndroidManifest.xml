@@ -19,6 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
+        <activity android:name=".activity.DetailItemActivity"></activity>
         <activity android:name=".activity.GuideActivity" /> <!-- 启动页，倒计时 -->
         <activity android:name=".activity.CountDownActivity">
             <intent-filter>
@@ -28,7 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DetailItemActivity" />
         <activity android:name=".activity.ListItemActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.RegisterActivity" />
